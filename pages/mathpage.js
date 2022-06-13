@@ -1,9 +1,6 @@
 import styles from "../styles/Home.module.css";
 import { useReducer, useState } from "react";
-
-//   create a function that generates a random math addition problem
-
-// const { addnum1, addnum2, addanswer } = generateAdditionProblem();
+import Swal from "sweetalert2";
 
 export default function MathPage() {
   const [additionOn, toggle] = useReducer((s) => !s, false);
@@ -37,8 +34,8 @@ export default function MathPage() {
     setSubnum2State(Math.floor(Math.random() * 100));
   };
   const generateMultiplicationProblem = () => {
-    setMultnum1State(Math.floor(Math.random() * 100));
-    setMultnum2State(Math.floor(Math.random() * 100));
+    setMultnum1State(Math.floor(Math.random() * 10));
+    setMultnum2State(Math.floor(Math.random() * 10));
   };
 
   const generateDivisionProblem = () => {
@@ -58,25 +55,118 @@ export default function MathPage() {
       setSubAnswerState(subnum2State - subnum1State);
     }
   };
+  const multState = () => {
+    setMultAnswerState(multnum1State * multnum2State);
+  };
+  const divState = () => {
+    setDivAnswerState(divnum1State / divnum2State);
+  };
+  //* FUNCTIONS FOR ANSWERING THE MATH PROBLEMS
 
+  //* FUNCTIONS FOR CHECKING THE MATH PROBLEMS
   const checkAddAnswer = (e) => {
     e.preventDefault();
     if (addAnswerState === answer) {
-      alert("Correct!");
+      Swal.fire({
+        title: "You rock!",
+        icon: "success",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
       toggleButton(!off);
     } else {
-      alert("Incorrect!");
+      Swal.fire({
+        title: "Oof, so close!",
+        icon: "error",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
     }
   };
   const checkSubAnswer = (e) => {
     e.preventDefault();
     if (subAnswerState === answer) {
-      alert("Correct!");
+      Swal.fire({
+        title: "You rock!",
+        icon: "success",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
       toggleButton(!off);
     } else {
-      alert("Incorrect!");
+      Swal.fire({
+        title: "Oof, so close!",
+        icon: "error",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
     }
   };
+  const checkMultAnswer = (e) => {
+    e.preventDefault();
+    if (multAnswerState === answer) {
+      Swal.fire({
+        title: "You rock!",
+        icon: "success",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
+      toggleButton(!off);
+    } else {
+      Swal.fire({
+        title: "Oof, so close!",
+        icon: "error",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
+    }
+  };
+  const checkDivAnswer = (e) => {
+    e.preventDefault();
+    if (divAnswerState === answer) {
+      Swal.fire({
+        title: "You rock!",
+        icon: "success",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
+      toggleButton(!off);
+    } else {
+      Swal.fire({
+        title: "Oof, so close!",
+        icon: "error",
+        showCloseButton: false,
+        showConfirmButton: false,
+        timer: 1500,
+        background: "#9000f7",
+        color: "#fff",
+      });
+    }
+  };
+  //* FUNCTIONS FOR CHECKING THE MATH PROBLEMS
+
+  //* FUNCTIONS FOR TOGGLING THE MATH PROBLEMS
   const handleAdditionPage = () => {
     toggle(!additionOn);
     generateAdditionProblem();
@@ -85,6 +175,17 @@ export default function MathPage() {
     toggleSubtraction(!subtractionOn);
     generateSubtractionProblem();
   };
+  const handleMultiplicationPage = () => {
+    toggleMultiplication(!multiplicationOn);
+    generateMultiplicationProblem();
+  };
+  const handleDivisionPage = () => {
+    toggleDivision(!divisionOn);
+    generateDivisionProblem();
+  };
+  //* FUNCTIONS FOR TOGGLING THE MATH PROBLEMS
+
+  //* FUNCTIONS FOR CLEARING THE MATH PROBLEMS
   const clearAddFields = (e) => {
     e.preventDefault();
     generateAdditionProblem();
@@ -97,26 +198,19 @@ export default function MathPage() {
     setAnswer("");
     toggleButton(!off);
   };
-  const handleMultiplicationPage = () => {
-    toggleMultiplication(!multiplicationOn);
-    generateMultiplicationProblem();
-  };
-
   const clearMultFields = (e) => {
     e.preventDefault();
     generateMultiplicationProblem();
     setAnswer("");
     toggleButton(!off);
   };
-  const checkMultAnswer = (e) => {
+  const clearDivFields = (e) => {
     e.preventDefault();
-    if (multAnswerState === answer) {
-      alert("Correct!");
-      toggleButton(!off);
-    } else {
-      alert("Incorrect!");
-    }
+    generateDivisionProblem();
+    setAnswer("");
+    toggleButton(!off);
   };
+  //* FUNCTIONS FOR CLEARING THE MATH PROBLEMS
 
   return (
     <div className={styles.container}>
@@ -126,6 +220,8 @@ export default function MathPage() {
             <h1 className={styles.title}>Mavi&apos;s Math!</h1>
             <button onClick={handleAdditionPage}>Addition!</button>
             <button onClick={handleSubtractionPage}>Subtraction!</button>
+            <button onClick={handleMultiplicationPage}>Multiplication!</button>
+            <button onClick={handleDivisionPage}>Division!</button>
           </div>
         )}
         {additionOn && (
@@ -178,6 +274,52 @@ export default function MathPage() {
               </div>
               {!off && <button onClick={checkSubAnswer}>Submit</button>}
               {off && <button onClick={clearSubFields}>Next &rarr;</button>}
+            </form>
+          </div>
+        )}
+        {multiplicationOn && (
+          <div className={styles.grid}>
+            <form>
+              <div className={styles.card}>
+                <div className={styles.mathBox}>
+                  <h1>{multnum1State}</h1>
+                  <h1>x{multnum2State}</h1>
+                </div>
+                <input
+                  className={styles.input}
+                  value={answer}
+                  onChange={(e) => {
+                    setAnswer(Number(e.target.value));
+                    multState();
+                  }}
+                  type="number"
+                />
+              </div>
+              {!off && <button onClick={checkMultAnswer}>Submit</button>}
+              {off && <button onClick={clearMultFields}>Next &rarr;</button>}
+            </form>
+          </div>
+        )}
+        {divisionOn && (
+          <div className={styles.grid}>
+            <form>
+              <div className={styles.card}>
+                <div className={styles.mathBox}>
+                  <h1>{divnum1State}</h1>
+                  <h1>/{divnum2State}</h1>
+                </div>
+                <input
+                  className={styles.input}
+                  value={answer}
+                  onChange={(e) => {
+                    setAnswer(Number(e.target.value));
+                    divState();
+                  }}
+                  type="number"
+                />
+              </div>
+              {!off && <button onClick={checkDivAnswer}>Submit</button>}
+              {off && <button onClick={clearDivFields}>Next &rarr;</button>}
             </form>
           </div>
         )}

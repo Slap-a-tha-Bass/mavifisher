@@ -16,25 +16,13 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <nav className={styles.nav}>
-          <Link href="/mathpage">math</Link>
-        </nav>
         <h1 className={styles.title}>
-          Welcome to<a> Mavi&apos;s Site!</a>
+          Welcome to Mavi&apos;s Site!
         </h1>
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
+        <p>Copyright © 2022</p>
       </footer>
     </div>
   );

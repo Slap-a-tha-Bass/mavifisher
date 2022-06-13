@@ -3,13 +3,21 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className={styles.navbar}>
-      <Link href="/">
-        <a>Home</a>
-      </Link>
-      <Link href="/mathpage">
-        <a>Math</a>
-      </Link>
-    </nav>
+    <div>
+      <nav className={styles.nav1}>
+        <div>
+          <Link href="/">
+            <a>Home</a>
+          </Link>
+        </div>
+      </nav>
+      <nav className={styles.nav2}>
+        <div>
+          <Link href="/mathpage">
+            <a>Math</a>
+          </Link>
+        </div>
+      </nav>
+    </div>
   );
 }
