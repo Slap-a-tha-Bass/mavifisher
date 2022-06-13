@@ -35,6 +35,15 @@
   transform: rotate(-45deg);
   font-size: clamp(1rem, 2vw, 2rem);
 }
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navbar a {
+  margin: 0.5rem;
+  color: var(--title);
+}
 .title a {
   color: var(--title);
   text-decoration: none;
@@ -80,24 +89,49 @@
   flex-wrap: wrap;
   max-width: 800px;
 }
-
+.mathBox {
+  padding-right: 1.5rem;
+  border-bottom: 4px solid var(--title);
+}
+.input {
+  width: 100%;
+  padding: 1rem;
+  margin: 8px 0;
+  text-align: center;
+  display: inline-block;
+  border: 1px solid var(--title);
+  color: var(--title);
+  border-radius: 4px;
+  font-size: clamp(1rem, 2vw, 2rem);
+  background-color: transparent;
+}
+.input:active, .input:focus {
+  outline: none;
+  border: 3px solid var(--title);
+}
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input[type=number] {
+  -moz-appearance: textfield;
+}
 .card {
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
+  padding: 1.5rem 4.5rem 1.5rem 0.5rem;
+  text-align: right;
+  color: var(--title);
   text-decoration: none;
-  border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
+  max-width: 200px;
 }
 
 .card:hover,
 .card:focus,
 .card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+  color: var(--title);
+  border-color: var(--title);
 }
 
 .card h2 {

@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { useReducer } from "react";
-import Math from "../components/math";
 
 export default function Home() {
   const [on, toggle] = useReducer((s) => !s, false);

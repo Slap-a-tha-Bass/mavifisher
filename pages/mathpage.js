@@ -1,39 +1,184 @@
 import styles from "../styles/Home.module.css";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
+
+//   create a function that generates a random math addition problem
+
+// const { addnum1, addnum2, addanswer } = generateAdditionProblem();
 
 export default function MathPage() {
-  const [on, toggle] = useReducer((s) => !s, false);
+  const [additionOn, toggle] = useReducer((s) => !s, false);
+  const [off, toggleButton] = useReducer((s) => !s, false);
+  const [answer, setAnswer] = useState("");
+  const [addnum1State, setAddnum1State] = useState("");
+  const [addnum2State, setAddnum2State] = useState("");
+  const [addAnswerState, setAddAnswerState] = useState("");
+  const [subtractionOn, toggleSubtraction] = useReducer((s) => !s, false);
+  const [subnum1State, setSubnum1State] = useState("");
+  const [subnum2State, setSubnum2State] = useState("");
+  const [subAnswerState, setSubAnswerState] = useState("");
+  const [multiplicationOn, toggleMultiplication] = useReducer((s) => !s, false);
+  const [multnum1State, setMultnum1State] = useState("");
+  const [multnum2State, setMultnum2State] = useState("");
+  const [multAnswerState, setMultAnswerState] = useState("");
+  const [divisionOn, toggleDivision] = useReducer((s) => !s, false);
+  const [divnum1State, setDivnum1State] = useState("");
+  const [divnum2State, setDivnum2State] = useState("");
+  const [divAnswerState, setDivAnswerState] = useState("");
 
-  //   create a function that generates a random math addition problem
+  //* FUNCTIONS FOR GENERATING THE MATH PROBLEMS
+
   const generateAdditionProblem = () => {
-    const addnum1 = Math.floor(Math.random() * 100);
-    const addnum2 = Math.floor(Math.random() * 100);
-    const addanswer = addnum1 + addnum2;
-    return { addnum1, addnum2, addanswer };
+    setAddnum1State(Math.floor(Math.random() * 100));
+    setAddnum2State(Math.floor(Math.random() * 100));
   };
-  const { addnum1, addnum2, addanswer } = generateAdditionProblem();
-  console.log(addnum1, addnum2, addanswer);
-  //   create a function that generates a random math subtraction problem
-//   const generateSubtractionProblem = () => {
-//     const num1 = Math.floor(Math.random() * 100);
-//     const num2 = Math.floor(Math.random() * 100);
-//     const answer = num1 - num2;
-//     return { subtractnum1, subtractnum2, subtractanswer };
-//   };
-//   const { subtractnum1, subtractnum2, subtractanswer } =
-//     generateSubtractionProblem();
 
-  const handleStart = () => {
-    toggle(!on);
-    console.log(on);
+  const generateSubtractionProblem = () => {
+    setSubnum1State(Math.floor(Math.random() * 100));
+    setSubnum2State(Math.floor(Math.random() * 100));
   };
+  const generateMultiplicationProblem = () => {
+    setMultnum1State(Math.floor(Math.random() * 100));
+    setMultnum2State(Math.floor(Math.random() * 100));
+  };
+
+  const generateDivisionProblem = () => {
+    setDivnum1State(Math.floor(Math.random() * 100));
+    setDivnum2State(Math.floor(Math.random() * 100));
+  };
+  //* FUNCTIONS FOR GENERATING THE MATH PROBLEMS
+
+  //* FUNCTIONS FOR ANSWERING THE MATH PROBLEMS
+  const addState = () => {
+    setAddAnswerState(addnum1State + addnum2State);
+  };
+  const subState = () => {
+    if (subnum1State > subnum2State) {
+      setSubAnswerState(subnum1State - subnum2State);
+    } else {
+      setSubAnswerState(subnum2State - subnum1State);
+    }
+  };
+
+  const checkAddAnswer = (e) => {
+    e.preventDefault();
+    if (addAnswerState === answer) {
+      alert("Correct!");
+      toggleButton(!off);
+    } else {
+      alert("Incorrect!");
+    }
+  };
+  const checkSubAnswer = (e) => {
+    e.preventDefault();
+    if (subAnswerState === answer) {
+      alert("Correct!");
+      toggleButton(!off);
+    } else {
+      alert("Incorrect!");
+    }
+  };
+  const handleAdditionPage = () => {
+    toggle(!additionOn);
+    generateAdditionProblem();
+  };
+  const handleSubtractionPage = () => {
+    toggleSubtraction(!subtractionOn);
+    generateSubtractionProblem();
+  };
+  const clearAddFields = (e) => {
+    e.preventDefault();
+    generateAdditionProblem();
+    setAnswer("");
+    toggleButton(!off);
+  };
+  const clearSubFields = (e) => {
+    e.preventDefault();
+    generateSubtractionProblem();
+    setAnswer("");
+    toggleButton(!off);
+  };
+  const handleMultiplicationPage = () => {
+    toggleMultiplication(!multiplicationOn);
+    generateMultiplicationProblem();
+  };
+
+  const clearMultFields = (e) => {
+    e.preventDefault();
+    generateMultiplicationProblem();
+    setAnswer("");
+    toggleButton(!off);
+  };
+  const checkMultAnswer = (e) => {
+    e.preventDefault();
+    if (multAnswerState === answer) {
+      alert("Correct!");
+      toggleButton(!off);
+    } else {
+      alert("Incorrect!");
+    }
+  };
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        {!on && (
+        {!additionOn && !subtractionOn && !multiplicationOn && !divisionOn && (
           <div>
             <h1 className={styles.title}>Mavi&apos;s Math!</h1>
-            <button onClick={handleStart}>Get Started!</button>
+            <button onClick={handleAdditionPage}>Addition!</button>
+            <button onClick={handleSubtractionPage}>Subtraction!</button>
+          </div>
+        )}
+        {additionOn && (
+          <div className={styles.grid}>
+            <form>
+              <div className={styles.card}>
+                <div className={styles.mathBox}>
+                  <h1>{addnum1State}</h1>
+                  <h1>+{addnum2State}</h1>
+                </div>
+                <input
+                  className={styles.input}
+                  value={answer}
+                  onChange={(e) => {
+                    setAnswer(Number(e.target.value));
+                    addState();
+                  }}
+                  type="number"
+                />
+              </div>
+              {!off && <button onClick={checkAddAnswer}>Submit</button>}
+              {off && <button onClick={clearAddFields}>Next &rarr;</button>}
+            </form>
+          </div>
+        )}
+        {subtractionOn && (
+          <div className={styles.grid}>
+            <form>
+              <div className={styles.card}>
+                {subnum1State > subnum2State ? (
+                  <div className={styles.mathBox}>
+                    <h1>{subnum1State}</h1>
+                    <h1>-{subnum2State}</h1>
+                  </div>
+                ) : (
+                  <div className={styles.mathBox}>
+                    <h1>{subnum2State}</h1>
+                    <h1>-{subnum1State}</h1>
+                  </div>
+                )}
+                <input
+                  className={styles.input}
+                  value={answer}
+                  onChange={(e) => {
+                    setAnswer(Number(e.target.value));
+                    subState();
+                  }}
+                  type="number"
+                />
+              </div>
+              {!off && <button onClick={checkSubAnswer}>Submit</button>}
+              {off && <button onClick={clearSubFields}>Next &rarr;</button>}
+            </form>
           </div>
         )}
       </main>
