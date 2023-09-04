@@ -18,7 +18,6 @@ export default function Homework_1() {
     { num1: 55, num2: 34, operator: "subtraction" },
     { num1: 50, num2: 29, operator: "subtraction" },
     { num1: 42, num2: 27, operator: "subtraction" },
-    { num1: 3, num2: 4, operator: "subtraction" },
   ];
 
   const [state, setState] = useState({
