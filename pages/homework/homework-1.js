@@ -105,12 +105,13 @@ export default function Homework_1() {
   };
   const resetGame = () => {
     setState({
-      ...state,
+      userAnswer: "",
+      isAnswered: false,
+      correctAnswer: null,
       currentHomeworkIndex: 0,
       currentHomeworkQuestion: homeworkQuestions[0],
-      isAnswered: false,
-      userAnswer: "",
       score: 0,
+      isQuizFinished: false,
     });
   };
 
@@ -165,7 +166,7 @@ export default function Homework_1() {
                     : "You can do better next time!"}
                 </h1>
                 <p>Score: {state.score}</p>
-                <button onClick={resetGame}>Play Again</button>
+                <button onClick={resetGame}>Try Again</button>
               </div>
             )}
           </div>
