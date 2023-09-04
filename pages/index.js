@@ -1,12 +1,7 @@
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 import styles from "../styles/Home.module.css";
-import { useReducer } from "react";
 
 export default function Home() {
-  const [on, toggle] = useReducer((s) => !s, false);
-
   return (
     <div className={styles.container}>
       <Head>
@@ -22,7 +17,7 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <p>Copyright © 2022</p>
+        <p>Copyright © {new Date().getFullYear()}</p>
       </footer>
     </div>
   );

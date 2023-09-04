@@ -2,22 +2,33 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background: linear-gradient(-70deg, var(--primary) 0%, var(--secondary) 46%, var(--tertiary) 100%);
-    color: #d6d6d6;
-    --primary: #01ff30;
-    --secondary: #4ed0fb;
-    --tertiary: #9000f7;
-    --transparent: #ffffff43;
-    --title: #005362;
-} 
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  background: linear-gradient(
+    -70deg,
+    var(--primary) 0%,
+    var(--secondary) 46%,
+    var(--tertiary) 100%
+  );
+  color: #005362;
+  --primary: #01ff30;
+  --secondary: #4ed0fb;
+  --tertiary: #9000f7;
+  --transparent: #ffffff43;
+  --title: #005362;
+}
 
 a {
   color: inherit;
   text-decoration: none;
 }
 button {
-  background: linear-gradient(to right, var(--title) 0%, var(--secondary) 46%, var(--tertiary) 100%);
+  background: linear-gradient(
+    to right,
+    var(--title) 0%,
+    var(--secondary) 46%,
+    var(--tertiary) 100%
+  );
   border: none;
   border-radius: 5px;
   color: whitesmoke;
@@ -25,7 +36,8 @@ button {
   font-weight: 700;
   padding: 0.75rem;
   font-size: 1.3rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace;
   cursor: pointer;
   transition: color 0.15s ease, border-color 0.15s ease;
   margin: 1rem;

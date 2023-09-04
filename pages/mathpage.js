@@ -1,326 +1,205 @@
 import styles from "../styles/Home.module.css";
-import { useReducer, useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 export default function MathPage() {
-  const [additionOn, toggle] = useReducer((s) => !s, false);
-  const [off, toggleButton] = useReducer((s) => !s, false);
-  const [answer, setAnswer] = useState("");
-  const [addnum1State, setAddnum1State] = useState("");
-  const [addnum2State, setAddnum2State] = useState("");
-  const [addAnswerState, setAddAnswerState] = useState("");
-  const [subtractionOn, toggleSubtraction] = useReducer((s) => !s, false);
-  const [subnum1State, setSubnum1State] = useState("");
-  const [subnum2State, setSubnum2State] = useState("");
-  const [subAnswerState, setSubAnswerState] = useState("");
-  const [multiplicationOn, toggleMultiplication] = useReducer((s) => !s, false);
-  const [multnum1State, setMultnum1State] = useState("");
-  const [multnum2State, setMultnum2State] = useState("");
-  const [multAnswerState, setMultAnswerState] = useState("");
-  const [divisionOn, toggleDivision] = useReducer((s) => !s, false);
-  const [divnum1State, setDivnum1State] = useState("");
-  const [divnum2State, setDivnum2State] = useState("");
-  const [divAnswerState, setDivAnswerState] = useState("");
+  const [state, setState] = useState({
+    operator: null,
+    num1: null,
+    num2: null,
+    userAnswer: "",
+    isAnswered: false,
+    correctAnswer: null, // Added correct answer to state
+    score: 0, // Added score to state
+    currentQuestion: 1, // Added current question to state
+  });
 
-  //* FUNCTIONS FOR GENERATING THE MATH PROBLEMS
+  const generateProblem = (operation) => {
+    let n1 = Math.floor(Math.random() * 100);
+    let n2 = Math.floor(Math.random() * 100);
 
-  const generateAdditionProblem = () => {
-    setAddnum1State(Math.floor(Math.random() * 100));
-    setAddnum2State(Math.floor(Math.random() * 100));
-  };
-
-  const generateSubtractionProblem = () => {
-    setSubnum1State(Math.floor(Math.random() * 100));
-    setSubnum2State(Math.floor(Math.random() * 100));
-  };
-  const generateMultiplicationProblem = () => {
-    setMultnum1State(Math.floor(Math.random() * 10));
-    setMultnum2State(Math.floor(Math.random() * 10));
-  };
-
-  const generateDivisionProblem = () => {
-    setDivnum1State(Math.floor(Math.random() * 100));
-    setDivnum2State(Math.floor(Math.random() * 100));
-  };
-  //* FUNCTIONS FOR GENERATING THE MATH PROBLEMS
-
-  //* FUNCTIONS FOR ANSWERING THE MATH PROBLEMS
-  const addState = () => {
-    setAddAnswerState(addnum1State + addnum2State);
-  };
-  const subState = () => {
-    if (subnum1State > subnum2State) {
-      setSubAnswerState(subnum1State - subnum2State);
+    if (operation === "division") {
+      n2 = Math.floor(Math.random() * 12) + 1; // Ensures n2 is between 1 and 12, inclusive
+      n1 = n2 * (Math.floor(Math.random() * 12) + 1); // Ensures result is a whole number, and the multiplier is between 1 and 12
     } else {
-      setSubAnswerState(subnum2State - subnum1State);
+      n1 = Math.floor(Math.random() * 100);
+      n2 = Math.floor(Math.random() * 100);
     }
+    if (operation === "subtraction" && n1 < n2) {
+      [n1, n2] = [n2, n1];
+    }
+    // if operation is multiplication, ensure n1 and n2 are not greater than 12
+    if (operation === "multiplication") {
+      n1 = Math.floor(Math.random() * 12);
+      n2 = Math.floor(Math.random() * 12);
+    }
+    setState((state) => ({
+      ...state,
+      num1: n1,
+      num2: n2,
+      operator: operation,
+    }));
   };
-  const multState = () => {
-    setMultAnswerState(multnum1State * multnum2State);
-  };
-  const divState = () => {
-    setDivAnswerState(divnum1State / divnum2State);
-  };
-  //* FUNCTIONS FOR ANSWERING THE MATH PROBLEMS
 
-  //* FUNCTIONS FOR CHECKING THE MATH PROBLEMS
-  const checkAddAnswer = (e) => {
+  const calculateAnswer = () => {
+    let calculatedAnswer;
+    setState((prevState) => {
+      switch (prevState.operator) {
+        case "addition":
+          calculatedAnswer = prevState.num1 + prevState.num2;
+          break;
+        case "subtraction":
+          calculatedAnswer = prevState.num1 - prevState.num2;
+          break;
+        case "multiplication":
+          calculatedAnswer = prevState.num1 * prevState.num2;
+          break;
+        case "division":
+          calculatedAnswer = prevState.num1 / prevState.num2;
+          break;
+        default:
+          break;
+      }
+      return { ...prevState, correctAnswer: calculatedAnswer };
+    });
+  };
+
+  const checkAnswer = (e) => {
     e.preventDefault();
-    if (addAnswerState === answer) {
-      Swal.fire({
-        title: "You rock!",
-        icon: "success",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
+    if (parseInt(state.userAnswer, 10) === state.correctAnswer) {
+      showAlert("You rock!", "success");
+      setState({
+        ...state,
+        score: state.score + 10, // each question is worth 10 points
+        isAnswered: true,
+        currentQuestion: state.currentQuestion + 1,
       });
-      toggleButton(!off);
     } else {
-      Swal.fire({
-        title: "Oof, so close!",
-        icon: "error",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
+      showAlert("Oof, so close!", "error");
+      setState({
+        ...state,
+        isAnswered: true,
+        currentQuestion: state.currentQuestion + 1,
       });
     }
+    clearFields(e);
   };
-  const checkSubAnswer = (e) => {
-    e.preventDefault();
-    if (subAnswerState === answer) {
-      Swal.fire({
-        title: "You rock!",
-        icon: "success",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
-      });
-      toggleButton(!off);
-    } else {
-      Swal.fire({
-        title: "Oof, so close!",
-        icon: "error",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
-      });
-    }
-  };
-  const checkMultAnswer = (e) => {
-    e.preventDefault();
-    if (multAnswerState === answer) {
-      Swal.fire({
-        title: "You rock!",
-        icon: "success",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
-      });
-      toggleButton(!off);
-    } else {
-      Swal.fire({
-        title: "Oof, so close!",
-        icon: "error",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
-      });
-    }
-  };
-  const checkDivAnswer = (e) => {
-    e.preventDefault();
-    if (divAnswerState === answer) {
-      Swal.fire({
-        title: "You rock!",
-        icon: "success",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
-      });
-      toggleButton(!off);
-    } else {
-      Swal.fire({
-        title: "Oof, so close!",
-        icon: "error",
-        showCloseButton: false,
-        showConfirmButton: false,
-        timer: 1500,
-        background: "#9000f7",
-        color: "#fff",
-      });
-    }
-  };
-  //* FUNCTIONS FOR CHECKING THE MATH PROBLEMS
 
-  //* FUNCTIONS FOR TOGGLING THE MATH PROBLEMS
-  const handleAdditionPage = () => {
-    toggle(!additionOn);
-    generateAdditionProblem();
+  const showAlert = (title, icon) => {
+    Swal.fire({
+      title,
+      icon,
+      showCloseButton: false,
+      showConfirmButton: false,
+      timer: 1000,
+      background: "#9000f7",
+      color: "#fff",
+    });
   };
-  const handleSubtractionPage = () => {
-    toggleSubtraction(!subtractionOn);
-    generateSubtractionProblem();
-  };
-  const handleMultiplicationPage = () => {
-    toggleMultiplication(!multiplicationOn);
-    generateMultiplicationProblem();
-  };
-  const handleDivisionPage = () => {
-    toggleDivision(!divisionOn);
-    generateDivisionProblem();
-  };
-  //* FUNCTIONS FOR TOGGLING THE MATH PROBLEMS
 
-  //* FUNCTIONS FOR CLEARING THE MATH PROBLEMS
-  const clearAddFields = (e) => {
-    e.preventDefault();
-    generateAdditionProblem();
-    setAnswer("");
-    toggleButton(!off);
+  const handleOperation = (operation) => {
+    console.log("Handling operation: ", operation);
+    setState((prevState) => {
+      console.log("Previous state:", prevState);
+      return { ...prevState, operator: operation };
+    });
+    generateProblem(operation);
+    calculateAnswer();
   };
-  const clearSubFields = (e) => {
+
+  const clearFields = (e) => {
     e.preventDefault();
-    generateSubtractionProblem();
-    setAnswer("");
-    toggleButton(!off);
+    setState((prevState) => ({
+      ...prevState,
+      userAnswer: "",
+      isAnswered: false,
+    }));
+    generateProblem(state.operator);
+    calculateAnswer();
   };
-  const clearMultFields = (e) => {
-    e.preventDefault();
-    generateMultiplicationProblem();
-    setAnswer("");
-    toggleButton(!off);
+  const resetGame = () => {
+    setState({
+      operator: null,
+      num1: null,
+      num2: null,
+      userAnswer: "",
+      isAnswered: false,
+      currentQuestion: 1,
+      score: 0,
+    });
   };
-  const clearDivFields = (e) => {
-    e.preventDefault();
-    generateDivisionProblem();
-    setAnswer("");
-    toggleButton(!off);
-  };
-  //* FUNCTIONS FOR CLEARING THE MATH PROBLEMS
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        {!additionOn && !subtractionOn && !multiplicationOn && !divisionOn && (
+        {!state.operator && (
           <div>
             <h1 className={styles.title}>Mavi&apos;s Math!</h1>
-            <button onClick={handleAdditionPage}>Addition!</button>
-            <button onClick={handleSubtractionPage}>Subtraction!</button>
-            <button onClick={handleMultiplicationPage}>Multiplication!</button>
-            <button onClick={handleDivisionPage}>Division!</button>
+            <button onClick={() => handleOperation("addition")}>
+              Addition!
+            </button>
+            <button onClick={() => handleOperation("subtraction")}>
+              Subtraction!
+            </button>
+            <button onClick={() => handleOperation("multiplication")}>
+              Multiplication!
+            </button>
+            <button onClick={() => handleOperation("division")}>
+              Division!
+            </button>
           </div>
         )}
-        {additionOn && (
+        {state.currentQuestion <= 10 ? (
           <div className={styles.grid}>
-            <form>
-              <div className={styles.card}>
-                <div className={styles.mathBox}>
-                  <h1>{addnum1State}</h1>
-                  <h1>+{addnum2State}</h1>
+            {state.operator && (
+              <form>
+                <div className={styles.card}>
+                  <div className={styles.mathBox}>
+                    <h1>{state.num1}</h1>
+                    <h1>
+                      <span>
+                        {" "}
+                        {state.operator === "addition"
+                          ? "+"
+                          : state.operator === "subtraction"
+                          ? "-"
+                          : state.operator === "multiplication"
+                          ? "×"
+                          : "/"}
+                      </span>
+                      {state.num2}
+                    </h1>
+                  </div>
+                  <input
+                    className={styles.input}
+                    value={state.userAnswer}
+                    onChange={(e) =>
+                      setState({ ...state, userAnswer: e.target.value })
+                    }
+                    type="number"
+                    autoFocus
+                  />
                 </div>
-                <input
-                  className={styles.input}
-                  value={answer}
-                  onChange={(e) => {
-                    setAnswer(Number(e.target.value));
-                    addState();
-                  }}
-                  type="number"
-                />
-              </div>
-              {!off && <button onClick={checkAddAnswer}>Submit</button>}
-              {off && <button onClick={clearAddFields}>Next &rarr;</button>}
-            </form>
-          </div>
-        )}
-        {subtractionOn && (
-          <div className={styles.grid}>
-            <form>
-              <div className={styles.card}>
-                {subnum1State > subnum2State ? (
-                  <div className={styles.mathBox}>
-                    <h1>{subnum1State}</h1>
-                    <h1>-{subnum2State}</h1>
-                  </div>
-                ) : (
-                  <div className={styles.mathBox}>
-                    <h1>{subnum2State}</h1>
-                    <h1>-{subnum1State}</h1>
-                  </div>
+                {!state.isAnswered && (
+                  <button onClick={(e) => checkAnswer(e)}>Submit</button>
                 )}
-                <input
-                  className={styles.input}
-                  value={answer}
-                  onChange={(e) => {
-                    setAnswer(Number(e.target.value));
-                    subState();
-                  }}
-                  type="number"
-                />
-              </div>
-              {!off && <button onClick={checkSubAnswer}>Submit</button>}
-              {off && <button onClick={clearSubFields}>Next &rarr;</button>}
-            </form>
+              </form>
+            )}
+            <p className={styles.textCenter}>Score: {state.score}</p>
           </div>
-        )}
-        {multiplicationOn && (
+        ) : (
           <div className={styles.grid}>
-            <form>
-              <div className={styles.card}>
-                <div className={styles.mathBox}>
-                  <h1>{multnum1State}</h1>
-                  <h1>x{multnum2State}</h1>
-                </div>
-                <input
-                  className={styles.input}
-                  value={answer}
-                  onChange={(e) => {
-                    setAnswer(Number(e.target.value));
-                    multState();
-                  }}
-                  type="number"
-                />
+            {state.currentQuestion > 10 && (
+              <div>
+                <h1>
+                  {state.score > 80
+                    ? "Great Job!"
+                    : "You can do better next time!"}
+                </h1>
+                <p>Score: {state.score}</p>
+                <button onClick={resetGame}>Play Again</button>
               </div>
-              {!off && <button onClick={checkMultAnswer}>Submit</button>}
-              {off && <button onClick={clearMultFields}>Next &rarr;</button>}
-            </form>
-          </div>
-        )}
-        {divisionOn && (
-          <div className={styles.grid}>
-            <form>
-              <div className={styles.card}>
-                <div className={styles.mathBox}>
-                  <h1>{divnum1State}</h1>
-                  <h1>/{divnum2State}</h1>
-                </div>
-                <input
-                  className={styles.input}
-                  value={answer}
-                  onChange={(e) => {
-                    setAnswer(Number(e.target.value));
-                    divState();
-                  }}
-                  type="number"
-                />
-              </div>
-              {!off && <button onClick={checkDivAnswer}>Submit</button>}
-              {off && <button onClick={clearDivFields}>Next &rarr;</button>}
-            </form>
+            )}
           </div>
         )}
       </main>

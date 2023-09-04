@@ -18,6 +18,13 @@ export default function Navbar() {
           </Link>
         </div>
       </nav>
+      <nav className={styles.nav3}>
+        <div>
+          <Link href="/homework">
+            <a>Homework</a>
+          </Link>
+        </div>
+      </nav>
     </div>
   );
 }
